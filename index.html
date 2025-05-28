@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trivia CNBV - Financieros</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #cce7ff, #99cfff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      background: #f4faff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #005a9c;
+    }
+
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #003f66;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .option {
+      background: #e0f0ff;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .option:hover {
+      background: #b2ddff;
+    }
+
+    .option.correct {
+      background-color: #d4edda;
+      border-color: #28a745;
+    }
+
+    .option.incorrect {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+    }
+
+    .button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      opacity: 0.6;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .button.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .feedback {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container animate__animated animate__fadeIn">
+    <h1>Trivia sobre Sistemas Financieros</h1>
+    <div id="quiz">
+      <div id="question" class="question"></div>
+      <div id="options" class="options"></div>
+      <button id="nextBtn" class="button">Siguiente</button>
+    </div>
+    <div id="result" class="feedback" style="display:none;"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "¿Qué es una empresa fintech?",
+        a: "Entidad que combina tecnología y servicios financieros",
+        o: [
+          "Entidad que ofrece préstamos únicamente",
+          "Empresa que solo usa criptomonedas",
+          "Entidad que combina tecnología y servicios financieros",
+          "Banco tradicional con app"
+        ]
+      },
+      {
+        q: "¿Cuál de las siguientes es una empresa fintech?",
+        a: "Paypal",
+        o: ["BBVA", "Paypal", "Banxico", "Visa"]
+      },
+      {
+        q: "¿Qué función NO realiza una empresa fintech?",
+        a: "Regulación bancaria",
+        o: ["Pagos electrónicos", "Préstamos", "Regulación bancaria", "Transferencias"]
+      },
+      {
+        q: "¿Qué ley regula a las fintech en México?",
+        a: "Ley para Regular las Instituciones de Tecnología Financiera",
+        o: [
+          "Ley del Mercado de Valores",
+          "Ley para Regular las Instituciones de Tecnología Financiera",
+          "Ley General de Sociedades",
+          "Ley de Inversión Extranjera"
+        ]
+      },
+      {
+        q: "¿Qué significa SOFIPO?",
+        a: "Sociedades Financieras Populares",
+        o: ["Sociedades Financieras Privadas", "Sociedades Financieras Populares", "Sociedades Operativas Financieras", "Servicios Financieros Populares"]
+      },
+      {
+        q: "¿Qué hacen las SOFIPOS?",
+        a: "Otorgan créditos y captan recursos",
+        o: ["Solamente asesoran", "Operan bolsas", "Otorgan créditos y captan recursos", "Supervisan a bancos"]
+      },
+      {
+        q: "¿Cuál NO es función de las SOFIPOS?",
+        a: "Emitir bonos gubernamentales",
+        o: ["Expedir tarjetas", "Distribuir seguros", "Emitir bonos gubernamentales", "Recibir depósitos"]
+      },
+      {
+        q: "¿Es lo mismo un grupo financiero que una sociedad controladora?",
+        a: "No",
+        o: ["Sí", "No", "Depende", "Ambos son iguales"]
+      },
+      {
+        q: "¿Qué es un grupo financiero?",
+        a: "Asociación de intermediarios financieros",
+        o: ["Banco exclusivo", "Casa de bolsa", "Asociación de intermediarios financieros", "Empresa de seguros"]
+      },
+      {
+        q: "¿Qué es una sociedad controladora?",
+        a: "Sociedad que ejerce control sobre otras",
+        o: ["Banco regulador", "Sociedad que ejerce control sobre otras", "Institución de ahorro", "Entidad pública"]
+      },
+      {
+        q: "¿Qué ley regula los grupos financieros?",
+        a: "Ley para Regular las Agrupaciones Financieras",
+        o: ["Ley Bancaria", "Ley del Mercado de Valores", "Ley para Regular las Agrupaciones Financieras", "Ley de Instituciones de Crédito"]
+      },
+      {
+        q: "¿Cuántas entidades mínimas requiere un grupo financiero?",
+        a: "Tres y una sociedad controladora",
+        o: ["Dos bancos", "Una financiera", "Tres y una sociedad controladora", "Una casa de bolsa"]
+      },
+      {
+        q: "¿Qué es una casa de bolsa?",
+        a: "Intermediario autorizado para operaciones bursátiles",
+        o: ["Banco privado", "Gestora de fondos", "Intermediario autorizado para operaciones bursátiles", "Empresa de seguros"]
+      },
+      {
+        q: "¿Qué ley regula las casas de bolsa?",
+        a: "Ley del Mercado de Valores",
+        o: ["Ley del SAT", "Ley del Mercado de Valores", "Ley Fintech", "Ley de Intermediarios"]
+      },
+      {
+        q: "¿Quién pone en contacto oferentes y demandantes del mercado de valores?",
+        a: "Casas de bolsa",
+        o: ["Banxico", "Casas de bolsa", "Bancos", "CNBV"]
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const nextBtn = document.getElementById("nextBtn");
+    const resultEl = document.getElementById("result");
+
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      questionEl.textContent = `${currentQuestion + 1}. ${q.q}`;
+      optionsEl.innerHTML = "";
+      nextBtn.classList.remove("active");
+
+      q.o.forEach(opt => {
+        const btn = document.createElement("div");
+        btn.textContent = opt;
+        btn.className = "option animate__animated animate__fadeInUp";
+        btn.onclick = () => selectAnswer(btn, q.a);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selected, correct) {
+      const options = document.querySelectorAll(".option");
+      options.forEach(opt => {
+        opt.onclick = null;
+        if (opt.textContent === correct) {
+          opt.classList.add("correct");
+        } else if (opt === selected) {
+          opt.classList.add("incorrect");
+        }
+      });
+
+      if (selected.textContent === correct) {
+        score++;
+      }
+
+      nextBtn.classList.add("active");
+    }
+
+    nextBtn.onclick = () => {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    };
+
+    function showResult() {
+      document.getElementById("quiz").style.display = "none";
+      resultEl.style.display = "block";
+      let feedback = "";
+
+      if (score === 15) {
+        feedback = "¡Excelente! Dominaste todos los temas.";
+      } else if (score >= 12) {
+        feedback = "¡Muy bien! Solo unos pocos errores.";
+      } else if (score >= 8) {
+        feedback = "¡Bien hecho! Pero puedes mejorar.";
+      } else {
+        feedback = "Necesitas repasar los temas. ¡Ánimo!";
+      }
+
+      resultEl.innerHTML = `<p>Obtuviste ${score} de 15.</p><p>${feedback}</p>`;
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
